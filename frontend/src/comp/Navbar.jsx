@@ -14,6 +14,16 @@ const Navbar = () => {
           Add Product
         </Link>
       </div>
+      <div style={styles.buttons}
+        onClick={() => {
+          localStorage.removeItem('token')
+          window.location.reload();
+        }
+        }>
+           <Link to="/" style={styles.button}>
+          Logout
+        </Link>
+      </div>
     </div>
   );
 };

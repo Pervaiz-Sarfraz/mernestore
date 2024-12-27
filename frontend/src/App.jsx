@@ -5,6 +5,7 @@ import CreateProduct from './AddProduct';
 import LoginForm from './LoginForms';
 import RegisterForm from './RegisterForm';
 import { useState, useEffect } from 'react';
+import './App.css';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -18,7 +19,8 @@ function App() {
 
   return (
     <> 
-      <Navbar />
+      {/* Conditionally render the Navbar */}
+      {isAuthenticated && <Navbar />}
       <Routes>
         <Route path="/" element={isAuthenticated ? <HomePage /> : <LoginForm />} />
         <Route path="/create" element={isAuthenticated ? <CreateProduct /> : <LoginForm />} />
