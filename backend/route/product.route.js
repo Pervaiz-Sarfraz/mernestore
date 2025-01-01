@@ -6,6 +6,6 @@ const router = express.Router();
 router.post('/', authMiddleware, creatProduct);
 router.get('/', getProducts);
 router.delete('/:id', authMiddleware, deteleProduct);
-router.put('/:id', authMiddleware, updateProduct);
+router.put('/:id', updateProduct);
 
 export default router;

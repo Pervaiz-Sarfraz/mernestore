@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Product from "../models/product.model.js";
+import jwt from 'jsonwebtoken';
 export const creatProduct = async (req, res) => {
     const product = req.body;
     if (!product.name || !product.price || !product.image) {
@@ -38,13 +39,25 @@ export const deteleProduct = async (req, res) => {
 }
 
 export const updateProduct =  async (req, res) => {
+    console.log('productproductproductdassddsadsadsadsa');
     const {id} = req.params;
-    const product = req.body;
-    if (mongoose.Types.ObjectId.isValid(id)) {
-        res.status(404).json({ success: false, message: "Invalid Id" });
-    }
+    const {name,price,image} = req.body;
+    const token = req.header('token');
+
+    const jt =process.env.JWT_SECRET ;
+    jwt.verify(token, jt,(err,data)=>{
+     if(err)
+     {
+       res.json(err)
+     }
+     else{
+     //  data = decoded;
+       req.product = data.checkproduct;
+
+     }
+   });
     try {
-       const updateProduct= await Product.findByIdAndUpdate(id,product,{new:true})
+       const updateProduct= await Product.findByIdAndUpdate(id,name, price,image,{new:true})
         res.status(200).json({ success: true, data:updateProduct});
     } catch (error) {
         console.log('Error in creating Product', error.message);

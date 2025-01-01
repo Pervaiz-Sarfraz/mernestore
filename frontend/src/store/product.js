@@ -5,10 +5,7 @@ export const useProductStore = create((set) => ({
   user: null,
   token: null,
 
-  // Set user info (after login/register)
   setUser: (user, token) => set({ user, token }),
-
-  // Register user
   register: async (userData) => {
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -25,7 +22,6 @@ export const useProductStore = create((set) => ({
     return data;
   },
 
-  // Login user
   login: async (credentials) => {
     const res = await fetch("/api/auth/login", {
       method: "POST",
