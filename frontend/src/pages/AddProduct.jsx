@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useProductStore } from '../src/store/product';
+import  { useState } from 'react';
+import { useProductStore } from '../store/product';
 
 const CreatePage = () => {
   const [newProduct, setNewProduct] = useState({
     name: '',
     price: '',
-    image: null, // Change initial image to null
+    image: null, 
   });
 
   const { createProduct } = useProductStore();
@@ -14,8 +14,7 @@ const CreatePage = () => {
     const { success, message } = await createProduct(newProduct);
     alert(message);
     if (success) {
-      setNewProduct({ name: '', price: '', image: null }); // Reset form
-    }
+      setNewProduct({ name: '', price: '', image: null });     }
   };
 
   const handleImageChange = (e) => {

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { createProduct, loginurl, mainUrl, productsList, registerurl } from "../utls";
 
 export const useProductStore = create((set) => ({
   products: [],
@@ -7,7 +8,7 @@ export const useProductStore = create((set) => ({
 
   setUser: (user, token) => set({ user, token }),
   register: async (userData) => {
-    const res = await fetch("/api/auth/register", {
+    const res = await fetch(registerurl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +24,7 @@ export const useProductStore = create((set) => ({
   },
 
   login: async (credentials) => {
-    const res = await fetch("/api/auth/login", {
+    const res = await fetch(loginurl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,49 +39,56 @@ export const useProductStore = create((set) => ({
     return data;
   },
 
-  // Logout user
   logout: () => {
     set({ user: null, token: null });
     localStorage.removeItem("token");
   },
 
-  // Fetch products (only if authenticated)
   fetchProducts: async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       return { success: false, message: "Please login to view products." };
     }
+    console.log('token frontend', token);
+    
+    try {
+      const res = await fetch(productsList, {
+        headers: { "Authorization": `Bearer ${token}`},
+      });
+      const data = await res.json();
+      console.log('res of fetching data', data);
 
-    const res = await fetch("/api/products", {
-      headers: { "Authorization": `Bearer ${token}` },
-    });
-    const data = await res.json();
-    set({ products: data.data });
-  },
+      set({ products: data });
+    } catch (err) {
+      console.log(`error in fetch${err}`);
+          }
+    },
 
   // Create product
   createProduct: async (newProduct) => {
+    console.log('newProduct', newProduct);
+    
     const token = localStorage.getItem("token");
     if (!token) {
       return { success: false, message: "Please login to create a product." };
     }
 
-    const res = await fetch("/api/products", {
+    const res = await fetch(createProduct, {
       method: "POST",
       headers: {
+        "auth-token": `${token}`,
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify(newProduct),
     });
     const data = await res.json();
+    console.log('datadatadata', data);
     if (data.success) {
       set((state) => ({ products: [...state.products, data.data] }));
     }
     return data;
   },
 
-  // Delete product
   deleteProduct: async (pid) => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -89,31 +97,35 @@ export const useProductStore = create((set) => ({
 
     const res = await fetch(`/api/products/${pid}`, {
       method: "DELETE",
-      headers: { "Authorization": `Bearer ${token}` },
+      headers: {     
+         "auth-token": `${token}`,
+         "Content-Type": "application/json", 
+    },
     });
     const data = await res.json();
+    console.log('datadatadata', data);
     if (data.success) {
       set((state) => ({ products: state.products.filter((product) => product._id !== pid) }));
     }
     return data;
   },
 
-  // Update product
   updateProduct: async (pid, updatedProduct) => {
     const token = localStorage.getItem("token");
     if (!token) {
       return { success: false, message: "Please login to update a product." };
     }
-
-    const res = await fetch(`/api/products/${pid}`, {
+    const res = await fetch(`${mainUrl}/${pid}`, {
       method: "PUT",
       headers: {
+        "auth-token": `${token}`,
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify(updatedProduct),
     });
     const data = await res.json();
+    console.log('datadatadata', data);
+
     if (data.success) {
       set((state) => ({
         products: state.products.map((product) => (product._id === pid ? data.data : product)),

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import{ useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { loginurl } from '../utls';
 
 const LoginForms = () => {
   const [email, setEmail] = useState('');
@@ -12,12 +13,15 @@ const LoginForms = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token); // Store the token
-      navigate('/'); // Redirect to homepage after login
-      window.location.reload(); // Reload the page to refresh the main page
+      const res = await axios.post(loginurl, { email, password });
+      // console.log('res', res.data);
+      
+      localStorage.setItem('token', res.data.token); 
+      navigate('/');
+      window.location.reload();
     } catch (err) {
-      setError('Invalid credentials');
+      console.log(err);
+       setError('Invalid credentials');
     }
   };
 
@@ -42,7 +46,7 @@ const LoginForms = () => {
           <span>Password</span>
         </label>
         <button className="submit">Submit</button>
-        <p className="signin">Don't have an acount ? <Link to='/register'>Register</Link> </p>
+        <p className="signin"> Do not have an acount ? <Link to='/register'>Register</Link> </p>
       </form>
     </div>
   );

@@ -1,9 +1,9 @@
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Routes} from 'react-router-dom';
 import HomePage from './Products';
 import Navbar from './comp/Navbar';
-import CreateProduct from './AddProduct';
-import LoginForm from './LoginForms';
-import RegisterForm from './RegisterForm';
+import CreateProduct from './pages/AddProduct';
+import LoginForm from './pages/LoginForms';
+import RegisterForm from './pages/RegisterForm';
 import { useState, useEffect } from 'react';
 import './App.css';
 
@@ -19,7 +19,6 @@ function App() {
 
   return (
     <> 
-      {/* Conditionally render the Navbar */}
       {isAuthenticated && <Navbar />}
       <Routes>
         <Route path="/" element={isAuthenticated ? <HomePage /> : <LoginForm />} />

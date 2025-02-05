@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { registerurl } from '../utls';
 
 const RegisterForm = () => {
   const [email, setEmail] = useState('');
@@ -12,12 +13,22 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/auth/register', { name, email, password });
-      navigate('/login');
-    } catch (err) {
-      setError('Error during registration');
+      // console.log('res.ok', { name, email, password });
+  
+      const res = await axios.post(registerurl, { name, email, password });
+      if (res.data.status === false)
+      {
+        
+        alert(`${res.data.msg} ! Please Change the email` );
+      }
+      else{
+        navigate('/login');
+      } 
+    } catch (error) {
+      setError(`Error during registration: ${error.message}`);
     }
   };
+  
 
   return (
     <main>

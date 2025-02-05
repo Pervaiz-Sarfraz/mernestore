@@ -39,7 +39,6 @@ router.post(
 
       const payload = { userId: user.id };
       const token = jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
-
       res.json({ token });
     } catch (err) {
       console.error(err.message);
